@@ -184,7 +184,6 @@ def question5():
         ),
     )
 
-
 def index():
     """The main view."""
     return rx.color_mode.button(position="top-right"), rx.center(
@@ -214,6 +213,7 @@ def index():
         min_height="100vh",
     )
 
+
 def result():
     return rx.color_mode.button(position="top-right"), results(State)
 
@@ -224,3 +224,6 @@ app = rx.App(
 )
 app.add_page(index, title="Quiz - Reflex", on_load=State.onload)
 app.add_page(result, title="Quiz Results")
+
+# Agrega la función app.run() al final para iniciar la aplicación.
+app.run()
