@@ -1,4 +1,10 @@
-'''Welcome to Reflex! This file outlines the steps to create a basic app.'''
+"""
+Created on Fri Jun 07 09:36:14 2024
+
+@author: carballeda
+"""
+
+# sombrero seleccionador (sorting hat)
 
 import copy
 import time
@@ -11,73 +17,113 @@ from .styles import question_style, page_background
 
 
 class State(rx.State):
-    '''The app state.'''
+    """The app state."""
 
-    default_answers = [None, None, [False, False, False, False, False]]
+    default_answers = [None, None, None, None, None]
     answers: List[Any]
-    answer_key = ['False', '[10, 20, 30, 40]', [False, False, True, True, True]]
+    answer_key = ["1", "4", "3", "1", "2"]
     score: int
 
     def onload(self):
         self.answers = copy.deepcopy(self.default_answers)
 
-    def set_answers(self, answer, index, sub_index=None):
-        if sub_index is None:
-            self.answers[index] = answer
-        else:
-            self.answers[index][sub_index] = answer
+    def set_answers(self, answer, index):
+        self.answers[index] = answer
 
     def submit(self):
-        total, correct = 0, 0
-        for i in range(len(self.answers)):
-            if self.answers[i] == self.answer_key[i]:
-                correct += 1
-            total += 1
-        self.score = int(correct / total * 100)
-        return rx.redirect('/result')
+        house_scores = {'gryffindor': 0, 'ravenclaw': 0, 'hufflepuff': 0, 'slytherin': 0}
+        for i, answer in enumerate(self.answers):
+            if i == 0:
+                if answer == "1":
+                    house_scores['gryffindor'] += 1
+                elif answer == "2":
+                    house_scores['ravenclaw'] += 1
+                elif answer == "3":
+                    house_scores['hufflepuff'] += 1
+                elif answer == "4":
+                    house_scores['slytherin'] += 1
+            elif i == 1:
+                if answer == "1":
+                    house_scores['gryffindor'] += 1
+                elif answer == "2":
+                    house_scores['ravenclaw'] += 1
+                elif answer == "3":
+                    house_scores['hufflepuff'] += 1
+                elif answer == "4":
+                    house_scores['slytherin'] += 1
+            elif i == 2:
+                if answer == "1":
+                    house_scores['gryffindor'] += 1
+                elif answer == "2":
+                    house_scores['ravenclaw'] += 1
+                elif answer == "3":
+                    house_scores['hufflepuff'] += 1
+                elif answer == "4":
+                    house_scores['slytherin'] += 1
+            elif i == 3:
+                if answer == "1":
+                    house_scores['gryffindor'] += 1
+                elif answer == "2":
+                    house_scores['ravenclaw'] += 1
+                elif answer == "3":
+                    house_scores['hufflepuff'] += 1
+                elif answer == "4":
+                    house_scores['slytherin'] += 1
+            elif i == 4:
+                if answer == "1":
+                    house_scores['gryffindor'] += 1
+                elif answer == "2":
+                    house_scores['ravenclaw'] += 1
+                elif answer == "3":
+                    house_scores['hufflepuff'] += 1
+                elif answer == "4":
+                    house_scores['slytherin'] += 1
+
+        self.score = max(house_scores, key=house_scores.get)
+        return rx.redirect("/result")
 
     @rx.var
     def percent_score(self):
-        return f'{self.score}%'
-
-
-def header():
-    return rx.vstack(
-        rx.heading('Python Quiz'),
-        rx.divider(),
-        rx.text('Here is an example of a quiz made in Reflex.'),
-        rx.text('Once submitted the results will be shown in the results page.'),
-        style=question_style,
-    )
+        house_names = {
+            'gryffindor': 'Gryffindor',
+            'ravenclaw': 'Ravenclaw',
+            'hufflepuff': 'Hufflepuff',
+            'slytherin': 'Slytherin'
+        }
+        return f"¡Tu casa es {house_names[self.score]}!"
 
 
 def question1():
+    """The main view."""
     return rx.vstack(
-        rx.heading('¡Bienvenido/a! Voy a descubrir a qué casa pertenece tu corazón.'),
-        rx.text(
-            '¿Cuál dirías que es el rasgo que más destaca en tu personalidad?'),
+        rx.heading("Pregunta #1"),
+        rx.text("¿Cuál dirías que es el rasgo que más destaca en tu personalidad?"),
+        rx.divider(),
         rx.radio(
-            items=['['Osadía']', '['Curiosidad']',  '['Lealtad']', '['Ambición']']
-            default_value=State.default_answers[1],
-            default_check=True,
-            on_change=lambda answer: State.set_answers(answer, 1),
+            items=[
+                "1. Osadía",
+                "2. Curiosidad",
+                "3. Lealtad",
+                "4. Ambición"
+            ],
+            default_value=State.default_answers[0],
+            default_checked=True,
+            on_change=lambda answer: State.set_answers(answer, 0),
         ),
     )
 
 
 def question2():
     return rx.vstack(
-        rx.heading('Question #2'),
-        rx.text('What is the output of the following addition (+) operator?'),
-        rx.code_block(
-            '''a = [10, 20]
-b = a
-b += [30, 40]
-print(a)''',
-            language='python',
-        ),
+        rx.heading("Pregunta #2"),
+        rx.text("Entras en un jardín encantado, ¿qué es lo que más llama tu atención?"),
         rx.radio(
-            items=['[10, 20, 30, 40]', '[10, 20]'],
+            items=[
+                "1. Un árbol de hojas de plata con manzanas doradas",
+                "2. Unas setas rojas que parecen estar hablando entre sí",
+                "3. Un estanque burbujeante en cuyas profundidades hay algo luminoso",
+                "4. Una estatua de un viejo mago con un brillo extraño en los ojos"
+            ],
             default_value=State.default_answers[1],
             default_check=True,
             on_change=lambda answer: State.set_answers(answer, 1),
@@ -86,32 +132,62 @@ print(a)''',
 
 
 def question3():
-    def answer_checkbox(answer, index):
-        return rx.checkbox(
-            text=rx.code(answer),
-            on_change=lambda answer: State.set_answers(answer, 2, index),
-        )
-
     return rx.vstack(
-        rx.heading('Question #3'),
-        rx.text(
-            'Which of the following are valid ways to specify the string literal ',
-            rx.code('foo'bar'),
-            ' in Python:',
+        rx.heading("Pregunta #3"),
+        rx.text("Una vez cada siglo el arbusto Flutterby produce flores que adaptan su aroma para atraer a los desprevenidos. Para atraerte a ti debería oler a:"),
+        rx.radio(
+            items=[
+                "1. Un fuego crepitante",
+                "2. Pergamino fresco",
+                "3. Tu hogar",
+                "4. El mar"
+            ],
+            default_value=State.default_answers[2],
+            default_check=True,
+            on_change=lambda answer: State.set_answers(answer, 2),
         ),
-        rx.vstack(
-            answer_checkbox('foo'bar', 0),
-            answer_checkbox(''foo''bar'', 1),
-            answer_checkbox(''foo\\\\'bar'', 2),
-            answer_checkbox(''''foo\'bar'''', 3),
-            answer_checkbox(''foo\'bar'', 4),
+    )
+
+
+def question4():
+    return rx.vstack(
+        rx.heading("Pregunta #4"),
+        rx.text("Dos personas se están peleando delante de ti, ¿qué haces?"),
+        rx.radio(
+            items=[
+                "1. Intento separarlas como sea",
+                "2. Trato de razonar con ambos y mediar",
+                "3. Busco ayuda",
+                "4. Dejo que se peleen, la cosa no va conmigo"
+            ],
+            default_value=State.default_answers[3],
+            default_check=True,
+            on_change=lambda answer: State.set_answers(answer, 3),
+        ),
+    )
+
+
+def question5():
+    return rx.vstack(
+        rx.heading("Pregunta #5"),
+        rx.text("Te gustaría inventar una poción que te asegurase:"),
+        rx.radio(
+            items=[
+                "1. Gloria",
+                "2. Sabiduría",
+                "3. Amor",
+                "4. Poder"
+            ],
+            default_value=State.default_answers[4],
+            default_check=True,
+            on_change=lambda answer: State.set_answers(answer, 4),
         ),
     )
 
 
 def index():
-    '''The main view.'''
-    return rx.color_mode.button(position='top-right'), rx.center(
+    """The main view."""
+    return rx.color_mode.button(position="top-right"), rx.center(
         rx.vstack(
             header(),
             rx.vstack(
@@ -120,29 +196,31 @@ def index():
                 question2(),
                 rx.divider(),
                 question3(),
+                rx.divider(),
+                question4(),
+                rx.divider(),
+                question5(),
                 rx.center(
-                    rx.button('Submit', width='6em', on_click=State.submit),
-                    width='100%',
+                    rx.button("Submit", width="6em", on_click=State.submit),
+                    width="100%",
                 ),
                 style=question_style,
-                spacing='5',
+                spacing="5",
             ),
-            align='center',
+            align="center",
         ),
         bg=page_background,
-        padding_y='2em',
-        min_height='100vh',
+        padding_y="2em",
+        min_height="100vh",
     )
 
-
 def result():
-    return rx.color_mode.button(position='top-right'), results(State)
-
+    return rx.color_mode.button(position="top-right"), results(State)
 
 app = rx.App(
     theme=rx.theme(
-        has_background=True, radius='none', accent_color='orange', appearance='light'
+        has_background=True, radius="none", accent_color="orange", appearance="light"
     ),
 )
-app.add_page(index, title='Quiz - Reflex', on_load=State.onload)
-app.add_page(result, title='Quiz Results')
+app.add_page(index, title="Quiz - Reflex", on_load=State.onload)
+app.add_page(result, title="Quiz Results")
