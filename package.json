@@ -9,6 +9,6 @@
     "author": "carballeda",
     "license": "MIT",
     "dependencies": {
-      "reflex": "^0.5.3"
+      "reflex": "^0.5.0"
     }
   }
