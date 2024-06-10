@@ -1,0 +1,14 @@
+{
+    "name": "rx-quiz",
+    "version": "1.0.0",
+    "description": "Aplicación de quiz con Reflex",
+    "main": "index.js",
+    "scripts": {
+      "start": "python rxconfig.py"
+    },
+    "author": "carballeda",
+    "license": "MIT",
+    "dependencies": {
+      "reflex": "^0.5.3"
+    }
+  }
